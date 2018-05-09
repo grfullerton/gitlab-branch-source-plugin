@@ -30,6 +30,7 @@ public final class GitLabSCMMergeRequestEvent extends GitLabSCMHeadEvent<MergeRe
             case update:
                 return new GitLabSCMMergeRequestEvent(UPDATED, id, hook, origin);
             default:
+                //TODO: this isn't working.  need to investigate
                 // other actions are "merged" and "closed". in both cases we can remove the head
                 return new GitLabSCMMergeRequestEvent(REMOVED, id, hook, origin);
         }
@@ -83,9 +84,10 @@ public final class GitLabSCMMergeRequestEvent extends GitLabSCMHeadEvent<MergeRe
             heads.add(head.merged());
         }
 
-        if (head.fromOrigin()) {
-            heads.add(createBranch(sourceProjectId, sourceBranch, hash));
-        }
+        //TODO: instead of blindly adding origin branches, use logic from setting (include/exclude/etc)
+        //if (head.fromOrigin()) {
+        //    heads.add(createBranch(sourceProjectId, sourceBranch, hash));
+        //}
 
         return heads;
     }
