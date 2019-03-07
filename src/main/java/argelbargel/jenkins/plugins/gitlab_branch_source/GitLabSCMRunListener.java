@@ -51,9 +51,7 @@ public class GitLabSCMRunListener extends RunListener<Run<?, ?>> {
 
     private GitLabSCMHeadMetadataAction getMetadataAction(Run<?, ?> build) {
         GitLabSCMHeadMetadataAction metadata = build.getAction(GitLabSCMHeadMetadataAction.class);
-        if (metadata == null) {
-            metadata = build.getParent().getAction(GitLabSCMHeadMetadataAction.class);
-        }
+
         /* If no metadata can be found attempt to put together enough information so that build statuses can be
          * reported back to GitLab even on manually triggered builds in Jenkins */
         if (metadata == null && build instanceof WorkflowRun) {
@@ -69,6 +67,8 @@ public class GitLabSCMRunListener extends RunListener<Run<?, ?>> {
                 String url = "";
                 metadata = new GitLabSCMHeadMetadataAction(objectDisplayName, projectId, branchName, hash, url);
             }
+        } else if (metadata == null) {
+            metadata = build.getParent().getAction(GitLabSCMHeadMetadataAction.class);
         }
 
         return metadata;
